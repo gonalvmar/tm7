@@ -90,6 +90,25 @@ main .wrap{padding:24px 22px 60px}
 .breakfast-meta div{background:#f7f7f3;border-radius:10px;padding:8px;font-size:12px;color:var(--muted)}
 .breakfast-meta strong{display:block;color:var(--ink);font-size:13px;margin-top:2px}
 
+
+.persistent-planner{padding:0 22px 60px}
+.planner-block{margin-top:20px}
+.planner-block-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px}
+.planner-block-head h3{margin:0;font-size:18px}
+.planner-block-head span{font-size:12px;color:var(--muted)}
+.breakfast-plan-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:10px}
+.breakfast-slot{min-height:132px;padding:11px}
+.breakfast-slot h3{font-size:13px}
+.slot-remove{margin-top:9px;border:0;background:transparent;padding:0;color:var(--muted);font-size:11px;text-decoration:underline;border-radius:0}
+.slot-remove:hover{color:var(--ink)}
+@media(max-width:1100px){.breakfast-plan-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){
+  .breakfast-plan-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .planner-block-head{display:block}
+  .planner-block-head span{display:block;margin-top:3px}
+}
+@media(max-width:430px){.breakfast-plan-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -135,32 +154,6 @@ main .wrap{padding:24px 22px 60px}
 
   <section id="grid" class="grid"></section>
 
-  <section class="planner">
-    <h2>Planificador semanal</h2>
-    <p class="lead">Un clic genera automáticamente una semana equilibrada: una comida de ave/carne, una de pescado y una vegetariana. Puedes sustituir cualquiera desde su ficha.</p>
-    <div class="plan-grid">
-      <div class="slot" data-slot="0"><h3>Lunes · Martes</h3><div class="chosen">Sin elegir</div><small>Carne o ave</small></div>
-      <div class="slot" data-slot="1"><h3>Miércoles · Jueves</h3><div class="chosen">Sin elegir</div><small>Pescado o marisco</small></div>
-      <div class="slot" data-slot="2"><h3>Viernes · Sábado</h3><div class="chosen">Sin elegir</div><small>Vegetariana</small></div>
-    </div>
-    <div class="plan-actions">
-      <button id="generate">Generar semana al azar</button>
-      <button id="copy">Copiar semana</button>
-      <button id="shoppingBtn">Generar lista de la compra</button>
-      <button onclick="window.print()">Imprimir / PDF</button>
-      <button id="clearPlan">Vaciar plan</button>
-    </div>
-
-    <div id="shoppingPanel" class="shopping-panel" hidden>
-      <h3>Lista de la compra</h3>
-      <p class="shopping-sub">Solo productos frescos o de reposición semanal/quincenal para las tres comidas seleccionadas. Se excluye la despensa estable: sal, pimienta, AOVE, vinagres, especias, salsa de soja y similares.</p>
-      <div id="shoppingGrid" class="shop-grid"></div>
-      <div class="shopping-actions">
-        <button id="copyShopping">Copiar lista</button>
-        <button id="uncheckShopping">Desmarcar todo</button>
-      </div>
-    </div>
-  </section>
 
   <div class="notice">
     <b>Cómo interpretar los enlaces de Cookidoo.</b> “Exacta” significa que el plato coincide con la receta oficial. “Exacta/análoga” indica que la receta oficial es esencialmente el mismo plato con una guarnición o ingrediente menor distinto. “Base adaptada” significa que Cookidoo proporciona la técnica principal y esta página indica la adaptación para vuestro patrón: sin trigo como base, sin queso mezclado y con hidratos/proteína suficientes.
@@ -179,22 +172,80 @@ main .wrap{padding:24px 22px 60px}
   </div>
 </div>
 
+
+<div class="wrap persistent-planner">
+  <section class="planner">
+    <h2>Planificador semanal</h2>
+    <p class="lead">Conmuta entre <b>Comidas</b> y <b>Desayunos</b> y ve añadiendo platos. El planificador permanece visible y la lista de la compra combina ambos catálogos.</p>
+
+    <div class="planner-block">
+      <div class="planner-block-head">
+        <h3>Comidas principales</h3>
+        <span>Una preparación para dos días</span>
+      </div>
+      <div class="plan-grid meal-plan-grid">
+        <div class="slot" data-meal-slot="0"><h3>Lunes · Martes</h3><div class="chosen">Sin elegir</div><small>Carne o ave</small></div>
+        <div class="slot" data-meal-slot="1"><h3>Miércoles · Jueves</h3><div class="chosen">Sin elegir</div><small>Pescado o marisco</small></div>
+        <div class="slot" data-meal-slot="2"><h3>Viernes · Sábado</h3><div class="chosen">Sin elegir</div><small>Vegetariana</small></div>
+      </div>
+    </div>
+
+    <div class="planner-block">
+      <div class="planner-block-head">
+        <h3>Desayunos postentreno</h3>
+        <span>Para la persona de 78 kg · puedes repetirlos</span>
+      </div>
+      <div class="breakfast-plan-grid">
+        <div class="slot breakfast-slot" data-breakfast-slot="0"><h3>Lunes</h3><div class="chosen">Sin elegir</div><small>Desayuno</small></div>
+        <div class="slot breakfast-slot" data-breakfast-slot="1"><h3>Martes</h3><div class="chosen">Sin elegir</div><small>Desayuno</small></div>
+        <div class="slot breakfast-slot" data-breakfast-slot="2"><h3>Miércoles</h3><div class="chosen">Sin elegir</div><small>Desayuno</small></div>
+        <div class="slot breakfast-slot" data-breakfast-slot="3"><h3>Jueves</h3><div class="chosen">Sin elegir</div><small>Desayuno</small></div>
+        <div class="slot breakfast-slot" data-breakfast-slot="4"><h3>Viernes</h3><div class="chosen">Sin elegir</div><small>Desayuno</small></div>
+        <div class="slot breakfast-slot" data-breakfast-slot="5"><h3>Sábado</h3><div class="chosen">Sin elegir</div><small>Desayuno</small></div>
+        <div class="slot breakfast-slot" data-breakfast-slot="6"><h3>Domingo</h3><div class="chosen">Sin elegir</div><small>Desayuno</small></div>
+      </div>
+    </div>
+
+    <div class="plan-actions">
+      <button id="generate">Generar comidas al azar</button>
+      <button id="generateBreakfasts">Generar desayunos al azar</button>
+      <button id="copy">Copiar semana</button>
+      <button id="shoppingBtn">Generar lista de la compra</button>
+      <button onclick="window.print()">Imprimir / PDF</button>
+      <button id="clearPlan">Vaciar plan</button>
+    </div>
+
+    <div id="shoppingPanel" class="shopping-panel" hidden>
+      <h3>Lista de la compra</h3>
+      <p class="shopping-sub">Incluye los ingredientes principales consumibles de las comidas y desayunos seleccionados —también cereales, pseudocereales, legumbres, avena, polenta, tofu y similares—. Se excluye la despensa estable y de condimentación: sal, pimienta, AOVE, vinagres, especias, salsa de soja, mostaza y similares.</p>
+      <div id="shoppingGrid" class="shop-grid"></div>
+      <div class="shopping-actions">
+        <button id="copyShopping">Copiar lista</button>
+        <button id="uncheckShopping">Desmarcar todo</button>
+      </div>
+    </div>
+  </section>
+</div>
+
 </main>
 
 <script>
 const RECIPES = [{"id":1,"cat":"Ave","title":"Pollo al curry de coco con arroz","cookidoo_title":"Pollo al curry de coco con arroz","url":"https://cookidoo.es/recipes/recipe/es-es/r621747","match":"Exacta","active":10,"total":"45 min","servings":"6","freeze":"Sí","season":"Todo el año","notes":"Sustituir aceite de girasol por AOVE. Perfecta para lote L-M / X-J / V-S.","tags":["curry","arroz","pollo","lote"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/cea2642c-c319-406c-a768-48f293d04613/Derivates/c5a57f81-0826-4220-9c65-de975083abaf.jpg"},{"id":2,"cat":"Ave","title":"Pollo mediterráneo con tomate y aceitunas + arroz","cookidoo_title":"Pollo guisado con tomate y aceitunas","url":"https://cookidoo.es/recipes/recipe/es-ES/r36939","match":"Base adaptada","active":15,"total":"45 min","servings":"4","freeze":"Sí","season":"Todo el año","notes":"Usar la receta como base y añadir arroz como guarnición. Si hace falta completar el lote, aumentar acompañamiento, no sobrecargar el vaso.","tags":["mediterránea","arroz","pollo","tomate"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/B05227C5-2020-47C4-86BB-4826A43C4C6F/Derivates/1E97C909-D687-4C84-8849-17E124DF9D63.jpg"},{"id":3,"cat":"Ave","title":"Pollo al limón con verduras + quinoa","cookidoo_title":"Pollo al limón con verduras","url":"https://cookidoo.es/recipes/recipe/es-ES/r787277","match":"Base adaptada","active":10,"total":"40 min","servings":"6","freeze":"Sí","season":"Primavera/verano","notes":"Añadir quinoa cocida como hidrato principal. Puede dejarse preparada el fin de semana.","tags":["limón","quinoa","pollo","verduras"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/3009892C-6EFA-4C28-AEA7-7A86B8474D03/Derivates/23795A71-4FAC-4BD3-B1E1-5A8EB6CE9D96.jpg"},{"id":4,"cat":"Ave","title":"Arroz, pollo y brócoli estilo mexicano","cookidoo_title":"Cocina en niveles: arroz, pollo y brócoli","url":"https://cookidoo.es/recipes/recipe/es-ES/r217576","match":"Base adaptada","active":5,"total":"35 min","servings":"4","freeze":"Sí","season":"Todo el año","notes":"Omitir tortillas. Mantener arroz, pollo, pimiento, tomate y brócoli; ajustar picante a nivel medio.","tags":["mexicana","arroz","pollo","brócoli"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/84A774AF-6904-49C5-8978-6471CDF3C06E/Derivates/4B6DFDAD-BB82-483D-9BEA-68B613EC3745.jpg"},{"id":5,"cat":"Ave","title":"Pollo especiado con verduras y garbanzos + quinoa","cookidoo_title":"Pollo guisado con tomate y aceitunas","url":"https://cookidoo.es/recipes/recipe/es-ES/r36939","match":"Base adaptada","active":15,"total":"45 min","servings":"4","freeze":"Sí","season":"Otoño/invierno","notes":"Usar la técnica de guiso; sustituir aceitunas por garbanzos y añadir comino, cúrcuma y canela. Quinoa aparte.","tags":["marroquí","quinoa","pollo","garbanzos"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/B05227C5-2020-47C4-86BB-4826A43C4C6F/Derivates/1E97C909-D687-4C84-8849-17E124DF9D63.jpg"},{"id":6,"cat":"Ave","title":"Albóndigas de pavo con tomate + patata/boniato","cookidoo_title":"Albóndigas de pavo con salsa de tomate","url":"https://cookidoo.es/recipes/recipe/es-ES/r125330","match":"Base adaptada","active":10,"total":"30 min","servings":"4","freeze":"Sí","season":"Todo el año","notes":"Eliminar feta. Mantener copos de avena como ligante. Completar con patata o boniato.","tags":["pavo","albóndigas","tomate","boniato"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/3F7A1E89-FC78-4272-8297-71892A962A88/Derivates/A314DC09-8221-41C5-BA31-83F29F33026A.jpg"},{"id":7,"cat":"Ave","title":"Estofado de pavo con verduras y patata","cookidoo_title":"Estofado de pavo al ajillo","url":"https://cookidoo.es/recipes/recipe/es/r751922","match":"Base adaptada","active":15,"total":"~45 min","servings":"4","freeze":"Sí","season":"Otoño/invierno","notes":"La receta lleva poca harina de trigo: puede mantenerse o sustituirse por maicena. Buena receta de invierno.","tags":["pavo","patata","guiso","verduras"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/b6572325-6184-4aad-ad54-a02334a7b6bf/Derivates/7dfbe74f-032a-41a6-bc1d-6e2b534f917c.jpg"},{"id":8,"cat":"Carne","title":"Ternera guisada con zanahoria y patata","cookidoo_title":"Aguja de ternera guisada con patatas a las hierbas","url":"https://cookidoo.es/recipes/recipe/es/r126184","match":"Exacta/análoga","active":15,"total":"1 h","servings":"6","freeze":"Sí","season":"Otoño/invierno","notes":"Lote de seis casi perfecto para vuestro sistema. Se puede añadir champiñón.","tags":["ternera","patata","guiso","lote"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/A299CB80-339A-47D6-B014-B092313AF93D/Derivates/8a06ef46-130c-425f-a4f9-a3ff5c85dc43.jpg"},{"id":9,"cat":"Carne","title":"Ternera con brócoli y jengibre + arroz","cookidoo_title":"Arroz con ternera y brócoli","url":"https://cookidoo.es/recipes/recipe/es-ES/r755415","match":"Exacta/análoga","active":10,"total":"~45 min","servings":"3-4","freeze":"Sí","season":"Todo el año","notes":"Prescindir de brotes de bambú si no se encuentran. El aceite de sésamo es opcional.","tags":["ternera","brócoli","arroz","asiática"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/93016382-39d0-426c-96a3-c0d71d213b96/Derivates/3d167905-de40-4863-a9e7-7cd7e473962b.jpg"},{"id":10,"cat":"Carne","title":"Albóndigas de ternera con tomate + quinoa/arroz","cookidoo_title":"Albóndigas de ternera en salsa de tomate","url":"https://cookidoo.es/recipes/recipe/es-es/r708997","match":"Base adaptada","active":5,"total":"10 min + bases","servings":"4","freeze":"Sí","season":"Todo el año","notes":"Sustituir pan rallado por avena o trigo sarraceno. Servir con arroz o quinoa.","tags":["ternera","albóndigas","tomate","quinoa"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/dcbd0506-700e-4e97-b6b3-6588fab9e322/Derivates/1d9d1438-b3b3-4017-bb97-0686911163da.jpg"},{"id":11,"cat":"Carne","title":"Curry tailandés de ternera con arroz","cookidoo_title":"Curry tailandés de ternera con arroz glutinoso","url":"https://cookidoo.es/recipes/recipe/es-ES/r368419","match":"Exacta/análoga","active":20,"total":"~1 h","servings":"6","freeze":"Sí","season":"Todo el año","notes":"Para simplificar, sustituir galanga por jengibre y omitir ingredientes difíciles si no están en el supermercado habitual.","tags":["ternera","curry","arroz","tailandesa"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/1df087ca-29d2-442f-a409-ef9f7e7ef40b/Derivates/d903df30-9093-4e1b-be00-3db9974cb76f.jpg"},{"id":12,"cat":"Carne","title":"Lomo de cerdo con manzana, cebolla y mostaza + boniato","cookidoo_title":"Lomo de cerdo al horno","url":"https://cookidoo.es/recipes/recipe/es-ES/r828382","match":"Base adaptada","active":15,"total":"1 h 35 min","servings":"8","freeze":"Sí","season":"Otoño/invierno","notes":"Omitir bacon y parmesano. Mantener manzana, cebolla, mostaza y hierbas. Boniato en air fryer.","tags":["cerdo","manzana","mostaza","boniato"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/a2f89958-43b3-4b13-9742-ea758c31e002/Derivates/49f317f2-c4f4-4c3f-84e9-13ec59127e2a.jpg"},{"id":13,"cat":"Carne","title":"Estofado de cerdo y verduras + patata","cookidoo_title":"Estofado de cerdo y verduras al tomillo","url":"https://cookidoo.es/recipes/recipe/es-ES/r286159","match":"Exacta/análoga","active":5,"total":"30 min","servings":"4","freeze":"Sí","season":"Otoño/invierno","notes":"Añadir patata cocida o air fryer. Muy buena relación esfuerzo/resultado.","tags":["cerdo","estofado","verduras","patata"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/999903EE-2B5C-4E2F-BACE-6A8F3027E1BC/Derivates/c8a7a5a2-2a00-43c3-9ffd-004808f32039.jpg"},{"id":14,"cat":"Pescado","title":"Salmón al limón + brócoli + patatas","cookidoo_title":"Menú: Sopa de guisantes y jengibre. Salmón al limón, brócoli y patatas","url":"https://cookidoo.es/recipes/recipe/es/r445757","match":"Exacta/análoga","active":15,"total":"45 min","servings":"4","freeze":"Regular","season":"Todo el año","notes":"Ignorar la sopa si no interesa. El bloque salmón-brócoli-patata encaja exactamente con vuestra estructura.","tags":["salmón","brócoli","patata","limón"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/1c22c751-8ad5-46ff-8b4b-f6f28b31681f/Derivates/3fd4e480-9cd4-4b80-9cc7-2155616bf05b.jpg"},{"id":15,"cat":"Pescado","title":"Salmón teriyaki + arroz + brócoli","cookidoo_title":"Salmón teriyaki al vacío","url":"https://cookidoo.es/recipes/recipe/es/r501576","match":"Base adaptada","active":20,"total":"1 h 20 min","servings":"4","freeze":"Regular","season":"Todo el año","notes":"Usar la marinada/idea teriyaki; para ahorrar tiempo, cocinar el salmón al horno o plancha y hacer arroz/brócoli aparte.","tags":["salmón","teriyaki","arroz","brócoli"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/2D905140-61EA-48E4-BB85-936AD091CBBC/Derivates/72865d1f-0bc4-409b-8cb8-991632d84e05.jpg"},{"id":16,"cat":"Pescado","title":"Merluza en salsa verde + patata","cookidoo_title":"Merluza en salsa verde con gambas y chirlas","url":"https://cookidoo.es/recipes/recipe/es-ES/r48926","match":"Exacta/análoga","active":10,"total":"30 min","servings":"6","freeze":"Regular","season":"Todo el año","notes":"Puede hacerse sin chirlas/gambas si se quiere simplificar. Añadir patata como guarnición.","tags":["merluza","salsa verde","patata","pescado"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/453D39FD-2333-43AD-A65D-7C549A3A2A27/Derivates/0FBA4A0F-49ED-46E6-A0B9-D8A0D82BBFDC.jpg"},{"id":17,"cat":"Pescado","title":"Bacalao con garbanzos y espinacas","cookidoo_title":"Espinacas con garbanzos y bacalao","url":"https://cookidoo.es/recipes/recipe/es-ES/r119094","match":"Exacta","active":20,"total":"40 min","servings":"6","freeze":"Sí","season":"Otoño/invierno","notes":"Una de las mejores coincidencias con vuestro sistema: 6 raciones y plato único. El poco pan de la receta entra en vuestra tolerancia.","tags":["bacalao","garbanzos","espinacas","lote"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/480D6789-56FD-45D4-A453-300BA7BD5859/Derivates/38EB8176-3818-4193-A59B-810F40A48A24.jpg"},{"id":18,"cat":"Pescado","title":"Curry de pescado y langostinos + arroz","cookidoo_title":"Curry de pescado y langostinos","url":"https://cookidoo.es/recipes/recipe/es-es/r263180","match":"Exacta/análoga","active":10,"total":"25 min","servings":"4","freeze":"Sí","season":"Todo el año","notes":"Se puede sustituir pasta de curry rojo por curry en polvo + cayena si se quiere simplificar la compra.","tags":["pescado","langostinos","curry","arroz"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/dae4fb7c-59ac-4a25-a758-dec4d3c6c658/Derivates/06d81719-2b43-4151-a698-55899d834a67.jpg"},{"id":19,"cat":"Pescado","title":"Paella de marisco","cookidoo_title":"Paella de marisco","url":"https://cookidoo.es/recipes/recipe/es-ES/r139619","match":"Exacta","active":35,"total":"50 min","servings":"6","freeze":"Sí","season":"Todo el año","notes":"Más trabajo activo que la media; reservar para una semana con más margen. Rinde 6 raciones.","tags":["marisco","arroz","paella","lote"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/d1bddb460487bad93ad5f7d28ff04db5/Derivates/445eb9ff2df8686c2bc965666d5613cea2aae79c.jpg"},{"id":20,"cat":"Pescado","title":"Gambas al ajillo + arroz y verduras","cookidoo_title":"Gambas al ajillo","url":"https://cookidoo.es/recipes/recipe/es-ES/r12419","match":"Base adaptada","active":5,"total":"15 min","servings":"6","freeze":"Regular","season":"Todo el año","notes":"Añadir arroz y verduras como componentes. Muy rápida y perfecta para una semana de poco tiempo.","tags":["gambas","ajo","arroz","rápida"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/7275a5aebd9454965bcd48681ec57319/Derivates/3e0de90a816e3efdfb10c3db20894882ddbabd2d.jpg"},{"id":21,"cat":"Pescado","title":"Atún con tomate, aceitunas y alcaparras + patata","cookidoo_title":"Ensalada murciana","url":"https://cookidoo.es/recipes/recipe/es-ES/r50256","match":"Base adaptada","active":10,"total":"10 min","servings":"6","freeze":"No","season":"Primavera/verano","notes":"Usar como base de sabores tomate-atún-aceitunas-alcaparras. Para versión caliente, marcar atún fresco y servir con patata.","tags":["atún","tomate","aceitunas","rápida"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/04552ba60dacceeb0b7a88680d4726cd/Derivates/66363d963f6be827e1eb4944c904d1964163ce39.jpg"},{"id":22,"cat":"Vegetariana","title":"Dhal de lentejas rojas + arroz","cookidoo_title":"Dhal de lentejas rojas (Dhaba dhal) - India","url":"https://cookidoo.es/recipes/recipe/es-ES/r366856","match":"Exacta/análoga","active":20,"total":"35 min","servings":"4","freeze":"Sí","season":"Otoño/invierno","notes":"Añadir arroz basmati para convertirlo en comida completa de mayor densidad energética.","tags":["lentejas","dhal","arroz","india"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/B96AD6B5-9F12-404C-8BA3-397D637CED66/Derivates/54545c7f-0746-4d1e-a465-fa878a8dd129.jpg"},{"id":23,"cat":"Vegetariana","title":"Lentejas guisadas con verduras + boniato","cookidoo_title":"Lentejas guisadas con verduras","url":"https://cookidoo.es/recipes/recipe/es-ES/r769611","match":"Base adaptada","active":10,"total":"2 h 50 min","servings":"6","freeze":"Sí","season":"Otoño/invierno","notes":"La máquina trabaja mucho, vosotros poco. Sustituir/acompañar el arroz de la receta con boniato si apetece.","tags":["lentejas","verduras","boniato","lote"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/9cd127de5b7de1060acf223110f2c96b/Derivates/c9edeb1cb673dffa0a93afc5192e7e2b7e2252b7.jpg"},{"id":24,"cat":"Vegetariana","title":"Curry de garbanzos y verduras + arroz","cookidoo_title":"Curry de garbanzos y verduras","url":"https://cookidoo.es/recipes/recipe/es/r363730","match":"Exacta/análoga","active":15,"total":"25 min","servings":"4","freeze":"Sí","season":"Todo el año","notes":"Aumentar garbanzos y añadir arroz para que la proteína y energía del plato sean suficientes.","tags":["garbanzos","curry","arroz","vegetariana"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/2d192c26-836e-4f55-82c3-29f4f6872fbf/Derivates/2467f400-61b9-4c89-b9fc-b68faf8974a5.jpg"},{"id":25,"cat":"Vegetariana","title":"Chana masala + huevos + patata/arroz","cookidoo_title":"Curry de garbanzos (Chana masala)","url":"https://cookidoo.es/recipes/recipe/es-ES/r72973","match":"Base adaptada","active":20,"total":"20 min","servings":"6","freeze":"Sí","season":"Todo el año","notes":"La receta base es ligera en proteína por ración; añadir huevos y patata/arroz según hambre.","tags":["garbanzos","huevos","india","vegetariana"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/CCE1BA46-7E7F-4D41-A30D-4EC08000D918/Derivates/7F0EF4AF-3E52-4A06-9E00-5C7D49A9F687.jpg"},{"id":26,"cat":"Vegetariana","title":"Guiso de setas y tofu + arroz","cookidoo_title":"Guiso de setas y tofu","url":"https://cookidoo.es/recipes/recipe/es-Es/r363731","match":"Base adaptada","active":10,"total":"30 min","servings":"2","freeze":"Sí","season":"Otoño/invierno","notes":"Aumentar tofu y servir con arroz. No multiplicar a ciegas la receta dentro del vaso: hacer la base y completar fuera si hace falta.","tags":["tofu","setas","arroz","vegetariana"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/23b73454-2113-40fb-87f4-5a94fddc7ca5/Derivates/89d746dd-8161-4dcd-8ef0-ccb5896b9da6.jpg"},{"id":27,"cat":"Vegetariana","title":"Arroz, tofu y brócoli en niveles","cookidoo_title":"Cocina en niveles: arroz, tofu y brócoli","url":"https://cookidoo.es/recipes/recipe/es-ES/r217580","match":"Exacta","active":5,"total":"30 min","servings":"4","freeze":"Sí","season":"Todo el año","notes":"Omitir chiles difíciles y usar pimentón/chile corriente. Excelente por su mínima intervención humana.","tags":["tofu","brócoli","arroz","rápida"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/1C31D6D4-CAE5-49C8-83A3-EB0EDD206D85/Derivates/8c8b1737-d772-471d-b2a5-4250692908f3.jpg"},{"id":28,"cat":"Vegetariana","title":"Boloñesa de soja texturizada + polenta","cookidoo_title":"Salsa boloñesa de soja","url":"https://cookidoo.es/recipes/recipe/es-ES/r247537","match":"Base adaptada","active":20,"total":"40 min","servings":"4","freeze":"Sí","season":"Todo el año","notes":"Servir sobre polenta en vez de pasta. La polenta puede hacerse en TM7 o de forma convencional.","tags":["soja texturizada","polenta","tomate","vegetariana"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/89D663AB-80FC-4098-A70D-5A48FAC91564/Derivates/5DE6490C-B2D9-412D-93BC-6A7DDCEF6451.jpg"},{"id":29,"cat":"Vegetariana","title":"Quinoa con setas y lentejas","cookidoo_title":"Risotto de quinoa con setas y champiñones","url":"https://cookidoo.es/recipes/recipe/es-ES/r363733","match":"Base adaptada","active":10,"total":"40 min","servings":"4","freeze":"Sí","season":"Otoño/invierno","notes":"Añadir lentejas cocidas para elevar proteína y convertirlo en plato principal completo.","tags":["quinoa","setas","lentejas","vegetariana"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/bff386d5-0021-4961-918d-b1981f5fa5a3/Derivates/b6578869-7ec6-46c3-9c0d-dcac333d62bd.jpg"},{"id":30,"cat":"Vegetariana","title":"Shakshuka con garbanzos + arroz/patata","cookidoo_title":"Shakshuka","url":"https://cookidoo.es/recipes/recipe/es/r909736","match":"Base adaptada","active":20,"total":"50 min","servings":"6","freeze":"Base sí","season":"Todo el año","notes":"Omitir pan pita. Añadir garbanzos y acompañar con arroz o patata. Congelar la base, no los huevos.","tags":["huevos","garbanzos","tomate","vegetariana"],"image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/E3274FDB-75F8-4032-B63C-FFB14BB3C28C/Derivates/0a9768a4-2509-4a14-ab15-b90f0571a0b7.jpg"}];
 const BREAKFASTS = [{"id":"D1","title":"Patata + salmón + huevos + espinacas","cookidoo_title":"Crema de verduras, salmón en salsa de mostaza con patatas y huevo duro","url":"https://cookidoo.es/recipes/recipe/es/r921323","image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/6869ee6be88eb2aafb2ef5d8b5dbc4a2/Derivates/10f2f654d594982786a238004247ba76ea5e7d1d.jpg","match":"Base muy próxima","active":10,"total":"45 min","servings":"4","starch":"Patata","protein":"Salmón + huevo","notes":"Usar el bloque salmón + patata + huevo + verduras. Omitir la crema si no apetece y simplificar la salsa. Muy buen desayuno post-CrossFit."},{"id":"D2","title":"Boniato + pollo especiado + verduras","cookidoo_title":"Pollo a las hierbas con verduras al vapor para dos","url":"https://cookidoo.es/recipes/recipe/es-ES/r37547","image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/40A077BF-C60F-449B-96E7-1393609A4240/Derivates/D340E80A-24DF-459D-A9F3-E198C8A1B290.jpg","match":"Base adaptada","active":10,"total":"45 min","servings":"2","starch":"Boniato","protein":"Pollo","notes":"Mantener la cocción multinivel de pollo y verduras y añadir boniato en el Varoma o precocido. Cambiar hierbas por curry, comino o pimentón para variar sin cambiar la logística."},{"id":"D3","title":"Quinoa + gambas + huevo + calabacín","cookidoo_title":"Ensalada de quinoa con calabacín y zanahoria","url":"https://cookidoo.es/recipes/recipe/es-es/r174234","image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/91EB2758-871D-438E-901F-990D93C25CF7/Derivates/2a016528-636b-4190-ad37-36f9b4121826.jpg","match":"Base adaptada","active":10,"total":"~30–40 min","servings":"6 base","starch":"Quinoa","protein":"Gambas + huevo","notes":"Usar la cocción de quinoa y calabacín como base; añadir gambas y huevos al Varoma. Eliminar la manzana de la receta original para mantener el perfil salado."},{"id":"D4","title":"Trigo sarraceno + pollo + setas","cookidoo_title":"Ensalada de trigo sarraceno con pollo","url":"https://cookidoo.es/recipes/recipe/es-ES/r368060","image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/BDAB2038-F18A-43E1-9EB7-1CCDAC949908/Derivates/5748de3c-f3f9-4e7c-9b20-7c3a89e8742a.jpg","match":"Base muy próxima","active":10,"total":"40 min","servings":"6","starch":"Trigo sarraceno","protein":"Pollo","notes":"La receta ya combina trigo sarraceno, pollo y verduras. Omitir feta y cambiar parte de las verduras por champiñón o setas. Excelente para cocinar seis raciones."},{"id":"D5","title":"Porridge salado de avena + huevo + claras + pavo","cookidoo_title":"Desayuno: Porridge de avena","url":"https://cookidoo.es/recipes/recipe/es-ES/r763312","image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/95312b25486462152e29daab707373b9/Derivates/98a1ed5ab5d7fc2a36cc006b74ca5b0b628ed6d5.jpg","match":"Técnica adaptada","active":5,"total":"15–20 min","servings":"1 grande","starch":"Avena","protein":"Huevo + claras + pavo","notes":"Usar solo la técnica del porridge: versión salada con avena, agua o leche, espinacas y especias. Incorporar huevo, claras y pavo al final. Muy poca intervención humana."},{"id":"D6","title":"Polenta + ragú de pavo y verduras","cookidoo_title":"Polenta","url":"https://cookidoo.es/recipes/recipe/es-ES/r68690","image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/d7319160035b63480f8cab7134e567b0/Derivates/0b262937efe16cb8c693b08cb3d0109cea8685ca.jpg","match":"Base adaptada","active":5,"total":"25 min + ragú","servings":"6 polenta","starch":"Maíz / polenta","protein":"Pavo","notes":"La TM7 resuelve la polenta sin estar removiendo. Servir con ragú de pavo picado, tomate y verduras preparado en lote."},{"id":"D7","title":"Patata + bacalao + garbanzos + espinacas","cookidoo_title":"Espinacas con garbanzos y bacalao","url":"https://cookidoo.es/recipes/recipe/es-ES/r119094","image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/480D6789-56FD-45D4-A453-300BA7BD5859/Derivates/38EB8176-3818-4193-A59B-810F40A48A24.jpg","match":"Base muy próxima","active":10,"total":"40 min","servings":"6","starch":"Patata + garbanzo","protein":"Bacalao + garbanzo","notes":"Partir de la receta de seis raciones y añadir patata cocida o al Varoma. Conviene reducir el aceite y mantener una ración generosa de bacalao y garbanzos."},{"id":"D8","title":"Lenteja roja + patata + huevo","cookidoo_title":"Crema de lentejas rojas","url":"https://cookidoo.es/recipes/recipe/es-ES/r124148","image":"https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480/img/recipe/ras/Assets/452AF515-1655-43CA-BBF8-32EEDB41E55F/Derivates/E5242B19-AF5A-4DD6-BD6B-A97F6194D464.jpg","match":"Base adaptada","active":10,"total":"35 min","servings":"2 base","starch":"Lenteja roja + patata","protein":"Lenteja + huevo","notes":"Usar la combinación rápida de lenteja roja y patata, dejando textura de guiso si se prefiere. Añadir 3–4 huevos para elevar claramente la proteína."}];
-const SHOPPING = {"1":{"supermercado":[["Leche de coco","2 latas"],["Tomate triturado","1 bote/lata grande"]],"carnicería":[["Pollo","800–900 g"]],"pescadería":[],"frutería":[["Pimiento","2"],["Calabacín","2"],["Cebolla","2"],["Ajo","1 cabeza"],["Cilantro o perejil","1 manojo"]]},"2":{"supermercado":[["Tomate triturado","1 bote/lata grande"],["Aceitunas","1 tarro pequeño"]],"carnicería":[["Pollo","800–900 g"]],"pescadería":[],"frutería":[["Pimiento","2"],["Cebolla","2"],["Ajo","1 cabeza"],["Tomate fresco","3–4"]]},"3":{"supermercado":[],"carnicería":[["Pollo","800–900 g"]],"pescadería":[],"frutería":[["Limón","2"],["Zanahoria","3"],["Espárragos verdes","1 manojo"],["Tomate","3–4"],["Cebolla","1"]]},"4":{"supermercado":[["Maíz cocido","1 lata"]],"carnicería":[["Pollo","800–900 g"]],"pescadería":[],"frutería":[["Brócoli","2"],["Pimiento","2"],["Tomate","4"],["Cebolla","1"],["Aguacate","1–2"]]},"5":{"supermercado":[["Garbanzos cocidos","2 botes"]],"carnicería":[["Pollo","700–800 g"]],"pescadería":[],"frutería":[["Calabaza","500 g"],["Zanahoria","3"],["Cebolla","2"],["Limón","1"],["Cilantro o perejil","1 manojo"]]},"6":{"supermercado":[["Huevos","2"],["Copos de avena","1 paquete si falta"],["Tomate triturado","1 bote/lata grande"]],"carnicería":[["Pavo picado","700–800 g"]],"pescadería":[],"frutería":[["Patata o boniato","1–1,2 kg"],["Cebolla","1"],["Ajo","1 cabeza"]]},"7":{"supermercado":[["Tomate triturado","1 bote/lata grande"]],"carnicería":[["Pavo","800–900 g"]],"pescadería":[],"frutería":[["Patata","1 kg"],["Pimiento","2"],["Zanahoria","3"],["Cebolla","2"],["Ajo","1 cabeza"]]},"8":{"supermercado":[],"carnicería":[["Ternera para guisar","1,2–1,3 kg"]],"pescadería":[],"frutería":[["Patata","500–800 g"],["Zanahoria","3–4"],["Champiñón","300 g"],["Cebolla","2"],["Ajo","1 cabeza"]]},"9":{"supermercado":[],"carnicería":[["Ternera en tiras","700–800 g"]],"pescadería":[],"frutería":[["Brócoli","2"],["Jengibre fresco","1 trozo"],["Cebolleta","1 manojo"],["Ajo","1 cabeza"]]},"10":{"supermercado":[["Huevos","2"],["Copos de avena","1 paquete si falta"],["Tomate triturado","1 bote/lata grande"]],"carnicería":[["Ternera picada","800 g"]],"pescadería":[],"frutería":[["Cebolla","2"],["Zanahoria","2"],["Calabacín","1"],["Ajo","1 cabeza"]]},"11":{"supermercado":[["Leche de coco","2 latas"]],"carnicería":[["Ternera","800–900 g"]],"pescadería":[],"frutería":[["Pimiento","2"],["Cebolla","2"],["Jengibre fresco","1 trozo"],["Lima","2"],["Cilantro","1 manojo"]]},"12":{"supermercado":[],"carnicería":[["Lomo de cerdo","1–1,2 kg"]],"pescadería":[],"frutería":[["Manzana","2–3"],["Cebolla","2"],["Boniato","1–1,2 kg"]]},"13":{"supermercado":[["Tomate triturado","1 bote/lata grande"]],"carnicería":[["Cerdo para guisar","900 g"]],"pescadería":[],"frutería":[["Patata","1 kg"],["Pimiento","2"],["Zanahoria","3"],["Cebolla","2"],["Ajo","1 cabeza"]]},"14":{"supermercado":[],"carnicería":[],"pescadería":[["Salmón fresco","800–900 g"]],"frutería":[["Patata","1 kg"],["Brócoli","2"],["Limón","2"],["Eneldo fresco","1 manojo"]]},"15":{"supermercado":[],"carnicería":[],"pescadería":[["Salmón fresco","800–900 g"]],"frutería":[["Brócoli","2"],["Jengibre fresco","1 trozo"],["Cebolleta","1 manojo"],["Ajo","1 cabeza"]]},"16":{"supermercado":[["Guisantes","1 bolsa pequeña"]],"carnicería":[],"pescadería":[["Merluza","1 kg"],["Gambas o chirlas","300–400 g (opc.)"]],"frutería":[["Patata","1 kg"],["Cebolla","1"],["Ajo","1 cabeza"],["Perejil","1 manojo"]]},"17":{"supermercado":[["Garbanzos cocidos","2 botes"],["Espinacas","400–500 g"]],"carnicería":[],"pescadería":[["Bacalao desalado","500–600 g"]],"frutería":[["Cebolla","1–2"],["Ajo","1 cabeza"]]},"18":{"supermercado":[["Leche de coco","1–2 latas"],["Tomate triturado","1 bote/lata"]],"carnicería":[],"pescadería":[["Pescado blanco","600–800 g"],["Langostinos","300 g"]],"frutería":[["Pimiento","1–2"],["Cebolla","1"],["Lima o limón","2"],["Cilantro","1 manojo"]]},"19":{"supermercado":[["Caldo de pescado","1 brick si no hay casero"]],"carnicería":[],"pescadería":[["Marisco variado","700–900 g"]],"frutería":[["Pimiento","1"],["Tomate","2–3"],["Ajo","1 cabeza"],["Limón","1"]]},"20":{"supermercado":[],"carnicería":[],"pescadería":[["Gambas peladas","700–800 g"]],"frutería":[["Brócoli","1–2"],["Calabacín","2"],["Pimiento","1–2"],["Ajo","2 cabezas"],["Perejil","1 manojo"]]},"21":{"supermercado":[["Aceitunas","1 tarro pequeño"],["Alcaparras","1 tarro pequeño"]],"carnicería":[],"pescadería":[["Atún fresco","800–900 g"]],"frutería":[["Tomate","6–8"],["Patata","1 kg"],["Cebolla","1"],["Limón","1"]]},"22":{"supermercado":[["Lentejas rojas","1 paquete"],["Leche de coco","1 lata (opc.)"]],"carnicería":[],"pescadería":[],"frutería":[["Espinacas","300–400 g"],["Cebolla","2"],["Tomate","3–4"],["Ajo","1 cabeza"],["Jengibre fresco","1 trozo"],["Cilantro","1 manojo"]]},"23":{"supermercado":[["Lentejas","1 paquete"]],"carnicería":[],"pescadería":[],"frutería":[["Boniato","600–800 g"],["Pimiento","2"],["Cebolla","2"],["Zanahoria","3"],["Calabacín","1"]]},"24":{"supermercado":[["Garbanzos cocidos","2 botes"],["Leche de coco","1–2 latas"],["Espinacas","300–400 g"]],"carnicería":[],"pescadería":[],"frutería":[["Calabacín","1–2"],["Pimiento","1–2"],["Brócoli","1"],["Cebolla","2"],["Ajo","1 cabeza"]]},"25":{"supermercado":[["Garbanzos cocidos","2 botes"],["Huevos","6–12"],["Tomate triturado","1 bote/lata grande"]],"carnicería":[],"pescadería":[],"frutería":[["Patata","1 kg"],["Cebolla","2"],["Tomate","3"],["Cilantro","1 manojo"]]},"26":{"supermercado":[["Tofu firme","600–750 g"]],"carnicería":[],"pescadería":[],"frutería":[["Setas/champiñones","700 g"],["Cebolla","2"],["Ajo","1 cabeza"],["Cebolleta","1 manojo"]]},"27":{"supermercado":[["Tofu firme","600–750 g"]],"carnicería":[],"pescadería":[],"frutería":[["Brócoli","2"],["Pimiento","2"],["Cebolleta","1 manojo"],["Ajo","1 cabeza"]]},"28":{"supermercado":[["Soja texturizada","250–300 g"],["Tomate triturado","2 botes/latas"],["Polenta","1 paquete si falta"]],"carnicería":[],"pescadería":[],"frutería":[["Cebolla","2"],["Zanahoria","3"],["Calabacín","1"],["Ajo","1 cabeza"]]},"29":{"supermercado":[["Lentejas cocidas","2 botes"]],"carnicería":[],"pescadería":[],"frutería":[["Setas/champiñones","500 g"],["Cebolla","2"],["Calabacín","1"],["Puerro","1"]]},"30":{"supermercado":[["Garbanzos cocidos","2 botes"],["Huevos","6–12"],["Tomate triturado","2 botes/latas"]],"carnicería":[],"pescadería":[],"frutería":[["Pimiento","2"],["Cebolla","2"],["Patata","1 kg"],["Ajo","1 cabeza"],["Perejil o cilantro","1 manojo"]]}};
+const SHOPPING = {"1":{"supermercado":[["Leche de coco","2 latas"],["Tomate triturado","1 bote/lata grande"],["Arroz basmati","300–350 g"]],"carnicería":[["Pollo","800–900 g"]],"pescadería":[],"frutería":[["Pimiento","2"],["Calabacín","2"],["Cebolla","2"],["Ajo","1 cabeza"],["Cilantro o perejil","1 manojo"]]},"2":{"supermercado":[["Tomate triturado","1 bote/lata grande"],["Aceitunas","1 tarro pequeño"],["Arroz","300–350 g"]],"carnicería":[["Pollo","800–900 g"]],"pescadería":[],"frutería":[["Pimiento","2"],["Cebolla","2"],["Ajo","1 cabeza"],["Tomate fresco","3–4"]]},"3":{"supermercado":[["Quinoa","300 g"]],"carnicería":[["Pollo","800–900 g"]],"pescadería":[],"frutería":[["Limón","2"],["Zanahoria","3"],["Espárragos verdes","1 manojo"],["Tomate","3–4"],["Cebolla","1"]]},"4":{"supermercado":[["Maíz cocido","1 lata"],["Arroz","300–350 g"]],"carnicería":[["Pollo","800–900 g"]],"pescadería":[],"frutería":[["Brócoli","2"],["Pimiento","2"],["Tomate","4"],["Cebolla","1"],["Aguacate","1–2"]]},"5":{"supermercado":[["Garbanzos cocidos","2 botes"],["Quinoa","250–300 g"]],"carnicería":[["Pollo","700–800 g"]],"pescadería":[],"frutería":[["Calabaza","500 g"],["Zanahoria","3"],["Cebolla","2"],["Limón","1"],["Cilantro o perejil","1 manojo"]]},"6":{"supermercado":[["Huevos","2"],["Copos de avena","1 paquete si falta"],["Tomate triturado","1 bote/lata grande"]],"carnicería":[["Pavo picado","700–800 g"]],"pescadería":[],"frutería":[["Patata o boniato","1–1,2 kg"],["Cebolla","1"],["Ajo","1 cabeza"]]},"7":{"supermercado":[["Tomate triturado","1 bote/lata grande"]],"carnicería":[["Pavo","800–900 g"]],"pescadería":[],"frutería":[["Patata","1 kg"],["Pimiento","2"],["Zanahoria","3"],["Cebolla","2"],["Ajo","1 cabeza"]]},"8":{"supermercado":[],"carnicería":[["Ternera para guisar","1,2–1,3 kg"]],"pescadería":[],"frutería":[["Patata","500–800 g"],["Zanahoria","3–4"],["Champiñón","300 g"],["Cebolla","2"],["Ajo","1 cabeza"]]},"9":{"supermercado":[["Arroz","300–350 g"]],"carnicería":[["Ternera en tiras","700–800 g"]],"pescadería":[],"frutería":[["Brócoli","2"],["Jengibre fresco","1 trozo"],["Cebolleta","1 manojo"],["Ajo","1 cabeza"]]},"10":{"supermercado":[["Huevos","2"],["Copos de avena","1 paquete si falta"],["Tomate triturado","1 bote/lata grande"],["Arroz o quinoa","300 g"]],"carnicería":[["Ternera picada","800 g"]],"pescadería":[],"frutería":[["Cebolla","2"],["Zanahoria","2"],["Calabacín","1"],["Ajo","1 cabeza"]]},"11":{"supermercado":[["Leche de coco","2 latas"],["Arroz","300–350 g"]],"carnicería":[["Ternera","800–900 g"]],"pescadería":[],"frutería":[["Pimiento","2"],["Cebolla","2"],["Jengibre fresco","1 trozo"],["Lima","2"],["Cilantro","1 manojo"]]},"12":{"supermercado":[],"carnicería":[["Lomo de cerdo","1–1,2 kg"]],"pescadería":[],"frutería":[["Manzana","2–3"],["Cebolla","2"],["Boniato","1–1,2 kg"]]},"13":{"supermercado":[["Tomate triturado","1 bote/lata grande"]],"carnicería":[["Cerdo para guisar","900 g"]],"pescadería":[],"frutería":[["Patata","1 kg"],["Pimiento","2"],["Zanahoria","3"],["Cebolla","2"],["Ajo","1 cabeza"]]},"14":{"supermercado":[],"carnicería":[],"pescadería":[["Salmón fresco","800–900 g"]],"frutería":[["Patata","1 kg"],["Brócoli","2"],["Limón","2"],["Eneldo fresco","1 manojo"]]},"15":{"supermercado":[["Arroz","300–350 g"]],"carnicería":[],"pescadería":[["Salmón fresco","800–900 g"]],"frutería":[["Brócoli","2"],["Jengibre fresco","1 trozo"],["Cebolleta","1 manojo"],["Ajo","1 cabeza"]]},"16":{"supermercado":[["Guisantes","1 bolsa pequeña"]],"carnicería":[],"pescadería":[["Merluza","1 kg"],["Gambas o chirlas","300–400 g (opc.)"]],"frutería":[["Patata","1 kg"],["Cebolla","1"],["Ajo","1 cabeza"],["Perejil","1 manojo"]]},"17":{"supermercado":[["Garbanzos cocidos","2 botes"],["Espinacas","400–500 g"]],"carnicería":[],"pescadería":[["Bacalao desalado","500–600 g"]],"frutería":[["Cebolla","1–2"],["Ajo","1 cabeza"]]},"18":{"supermercado":[["Leche de coco","1–2 latas"],["Tomate triturado","1 bote/lata"],["Arroz","300–350 g"]],"carnicería":[],"pescadería":[["Pescado blanco","600–800 g"],["Langostinos","300 g"]],"frutería":[["Pimiento","1–2"],["Cebolla","1"],["Lima o limón","2"],["Cilantro","1 manojo"]]},"19":{"supermercado":[["Caldo de pescado","1 brick si no hay casero"],["Arroz","300–350 g"]],"carnicería":[],"pescadería":[["Marisco variado","700–900 g"]],"frutería":[["Pimiento","1"],["Tomate","2–3"],["Ajo","1 cabeza"],["Limón","1"]]},"20":{"supermercado":[["Arroz","300–350 g"]],"carnicería":[],"pescadería":[["Gambas peladas","700–800 g"]],"frutería":[["Brócoli","1–2"],["Calabacín","2"],["Pimiento","1–2"],["Ajo","2 cabezas"],["Perejil","1 manojo"]]},"21":{"supermercado":[["Aceitunas","1 tarro pequeño"],["Alcaparras","1 tarro pequeño"]],"carnicería":[],"pescadería":[["Atún fresco","800–900 g"]],"frutería":[["Tomate","6–8"],["Patata","1 kg"],["Cebolla","1"],["Limón","1"]]},"22":{"supermercado":[["Lentejas rojas","1 paquete"],["Leche de coco","1 lata (opc.)"],["Arroz basmati","300–350 g"]],"carnicería":[],"pescadería":[],"frutería":[["Espinacas","300–400 g"],["Cebolla","2"],["Tomate","3–4"],["Ajo","1 cabeza"],["Jengibre fresco","1 trozo"],["Cilantro","1 manojo"]]},"23":{"supermercado":[["Lentejas","1 paquete"]],"carnicería":[],"pescadería":[],"frutería":[["Boniato","600–800 g"],["Pimiento","2"],["Cebolla","2"],["Zanahoria","3"],["Calabacín","1"]]},"24":{"supermercado":[["Garbanzos cocidos","2 botes"],["Leche de coco","1–2 latas"],["Espinacas","300–400 g"],["Arroz","300–350 g"]],"carnicería":[],"pescadería":[],"frutería":[["Calabacín","1–2"],["Pimiento","1–2"],["Brócoli","1"],["Cebolla","2"],["Ajo","1 cabeza"]]},"25":{"supermercado":[["Garbanzos cocidos","2 botes"],["Huevos","6–12"],["Tomate triturado","1 bote/lata grande"]],"carnicería":[],"pescadería":[],"frutería":[["Patata","1 kg"],["Cebolla","2"],["Tomate","3"],["Cilantro","1 manojo"]]},"26":{"supermercado":[["Tofu firme","600–750 g"],["Arroz","300–350 g"]],"carnicería":[],"pescadería":[],"frutería":[["Setas/champiñones","700 g"],["Cebolla","2"],["Ajo","1 cabeza"],["Cebolleta","1 manojo"]]},"27":{"supermercado":[["Tofu firme","600–750 g"],["Arroz","300–350 g"]],"carnicería":[],"pescadería":[],"frutería":[["Brócoli","2"],["Pimiento","2"],["Cebolleta","1 manojo"],["Ajo","1 cabeza"]]},"28":{"supermercado":[["Soja texturizada","250–300 g"],["Tomate triturado","2 botes/latas"],["Polenta","1 paquete si falta"]],"carnicería":[],"pescadería":[],"frutería":[["Cebolla","2"],["Zanahoria","3"],["Calabacín","1"],["Ajo","1 cabeza"]]},"29":{"supermercado":[["Lentejas cocidas","2 botes"],["Quinoa","300 g"]],"carnicería":[],"pescadería":[],"frutería":[["Setas/champiñones","500 g"],["Cebolla","2"],["Calabacín","1"],["Puerro","1"]]},"30":{"supermercado":[["Garbanzos cocidos","2 botes"],["Huevos","6–12"],["Tomate triturado","2 botes/latas"],["Arroz","300–350 g"]],"carnicería":[],"pescadería":[],"frutería":[["Pimiento","2"],["Cebolla","2"],["Patata","1 kg"],["Ajo","1 cabeza"],["Perejil o cilantro","1 manojo"]]}};
+const BREAKFAST_SHOPPING = {"D1":{"supermercado":[["Huevos","4"]],"carnicería":[],"pescadería":[["Salmón fresco","200–250 g"]],"frutería":[["Patata","350–400 g"],["Espinacas","100–150 g"]]},"D2":{"supermercado":[],"carnicería":[["Pollo","250–300 g"]],"pescadería":[],"frutería":[["Boniato","350–400 g"],["Calabacín","1"],["Pimiento","1"]]},"D3":{"supermercado":[["Huevos","2"],["Quinoa","120–150 g"]],"carnicería":[],"pescadería":[["Gambas peladas","180–220 g"]],"frutería":[["Calabacín","1"],["Zanahoria","1"]]},"D4":{"supermercado":[["Trigo sarraceno","120–150 g"]],"carnicería":[["Pollo","250–300 g"]],"pescadería":[],"frutería":[["Setas o champiñones","200–250 g"],["Verdura verde","1 ración"]]},"D5":{"supermercado":[["Huevos","2"],["Claras pasteurizadas","250 ml"],["Espinacas","100 g"],["Copos de avena","100–120 g"]],"carnicería":[["Pavo","150–200 g"]],"pescadería":[],"frutería":[]},"D6":{"supermercado":[["Tomate triturado","1 bote pequeño"],["Polenta","120–150 g"]],"carnicería":[["Pavo picado","250–300 g"]],"pescadería":[],"frutería":[["Cebolla","1"],["Zanahoria","1"],["Calabacín","1"]]},"D7":{"supermercado":[["Garbanzos cocidos","1 bote"],["Espinacas","150 g"]],"carnicería":[],"pescadería":[["Bacalao desalado","250–300 g"]],"frutería":[["Patata","300–350 g"]]},"D8":{"supermercado":[["Huevos","4"],["Lentejas rojas","150–200 g"]],"carnicería":[],"pescadería":[],"frutería":[["Patata","300–350 g"],["Cebolla","1"],["Tomate","2"]]}};
 const grid = document.getElementById('grid');
 const search = document.getElementById('search');
 const count = document.getElementById('count');
 let filter = 'all';
 let favorites = JSON.parse(localStorage.getItem('tm7_favorites') || '[]');
 let plan = JSON.parse(localStorage.getItem('tm7_week_plan') || '[null,null,null]');
+let breakfastPlan = JSON.parse(localStorage.getItem('tm7_breakfast_week_plan') || '[null,null,null,null,null,null,null]');
 
 function isFav(id) { return favorites.includes(id); }
 function saveFav() { localStorage.setItem('tm7_favorites', JSON.stringify(favorites)); }
 function savePlan() { localStorage.setItem('tm7_week_plan', JSON.stringify(plan)); }
+function saveBreakfastPlan() { localStorage.setItem('tm7_breakfast_week_plan', JSON.stringify(breakfastPlan)); }
 
 function visible(r) {
   const q = search.value.trim().toLowerCase();
@@ -268,19 +319,68 @@ function generateWeek() {
 }
 
 function renderPlan() {
-  document.querySelectorAll('.slot').forEach((el,i)=>{
+  document.querySelectorAll('[data-meal-slot]').forEach((el,i)=>{
     const id = plan[i];
     const r = RECIPES.find(x=>x.id===id);
     el.querySelector('.chosen').innerHTML = r ? `#${String(r.id).padStart(2,'0')} · ${r.title}` : 'Sin elegir';
-    el.querySelector('small').innerHTML = r ? `${r.active} min activos · <a href="${r.url}" target="_blank" rel="noopener">Cookidoo ↗</a>` : (i===0?'Carne o ave':i===1?'Pescado o marisco':'Vegetariana');
+    el.querySelector('small').innerHTML = r
+      ? `${r.active} min activos · <a href="${r.url}" target="_blank" rel="noopener">Cookidoo ↗</a><br><button class="slot-remove" onclick="removeMealSlot(${i})">Quitar</button>`
+      : (i===0?'Carne o ave':i===1?'Pescado o marisco':'Vegetariana');
   });
+}
+
+function renderBreakfastPlan() {
+  document.querySelectorAll('[data-breakfast-slot]').forEach((el,i)=>{
+    const id = breakfastPlan[i];
+    const r = BREAKFASTS.find(x=>x.id===id);
+    el.querySelector('.chosen').innerHTML = r ? `${r.id} · ${r.title}` : 'Sin elegir';
+    el.querySelector('small').innerHTML = r
+      ? `${r.active} min activos · <a href="${r.url}" target="_blank" rel="noopener">Cookidoo ↗</a><br><button class="slot-remove" onclick="removeBreakfastSlot(${i})">Quitar</button>`
+      : 'Desayuno';
+  });
+}
+
+function removeMealSlot(i){
+  plan[i] = null;
+  savePlan();
+  renderPlan();
+  document.getElementById('shoppingPanel').hidden = true;
+}
+
+function removeBreakfastSlot(i){
+  breakfastPlan[i] = null;
+  saveBreakfastPlan();
+  renderBreakfastPlan();
+  document.getElementById('shoppingPanel').hidden = true;
+}
+
+function addBreakfastToPlan(id){
+  let slot = breakfastPlan.findIndex(x=>x===null);
+  if (slot === -1) {
+    alert('Los siete desayunos ya están ocupados. Quita uno del planificador para sustituirlo.');
+    return;
+  }
+  breakfastPlan[slot] = id;
+  saveBreakfastPlan();
+  renderBreakfastPlan();
+  document.querySelector('.planner').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function generateBreakfastWeek(){
+  const ids = BREAKFASTS.map(r=>r.id);
+  const last = breakfastPlan.filter(Boolean);
+  const shuffled = [...ids].sort(()=>Math.random()-0.5);
+  const preferred = shuffled.filter(id=>!last.includes(id)).concat(shuffled.filter(id=>last.includes(id)));
+  breakfastPlan = Array.from({length:7}, (_,i)=>preferred[i % preferred.length]);
+  saveBreakfastPlan();
+  renderBreakfastPlan();
 }
 
 
 function mergeShoppingItems() {
   const stores = {"supermercado": [], "carnicería": [], "pescadería": [], "frutería": []};
-  const selected = plan.filter(Boolean);
-  selected.forEach(id => {
+
+  plan.filter(Boolean).forEach(id => {
     const data = SHOPPING[id];
     if (!data) return;
     Object.keys(stores).forEach(store => {
@@ -288,8 +388,14 @@ function mergeShoppingItems() {
     });
   });
 
-  // Combinar productos con el mismo nombre. Las cantidades se muestran juntas porque son
-  // estimaciones domésticas y no siempre son sumables de forma fiable (p.ej. "1 manojo" + "300 g").
+  breakfastPlan.filter(Boolean).forEach(id => {
+    const data = BREAKFAST_SHOPPING[id];
+    if (!data) return;
+    Object.keys(stores).forEach(store => {
+      (data[store] || []).forEach(item => stores[store].push(item));
+    });
+  });
+
   Object.keys(stores).forEach(store => {
     const map = new Map();
     stores[store].forEach(([name, qty]) => {
@@ -299,15 +405,15 @@ function mergeShoppingItems() {
     });
     stores[store] = [...map.values()].map(x => ({
       name: x.name,
-      qty: [...new Set(x.qtys)].join(" + ")
+      qty: x.qtys.join(" + ")
     }));
   });
   return stores;
 }
 
 function renderShoppingList() {
-  if (plan.filter(Boolean).length !== 3) {
-    alert('Genera o completa primero las tres comidas de la semana.');
+  if (plan.filter(Boolean).length === 0 && breakfastPlan.filter(Boolean).length === 0) {
+    alert('Añade al menos una comida o un desayuno al planificador.');
     return;
   }
   const stores = mergeShoppingItems();
@@ -368,11 +474,29 @@ document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('cl
 }));
 search.addEventListener('input',render);
 document.getElementById('generate').addEventListener('click',generateWeek);
-document.getElementById('clearPlan').addEventListener('click',()=>{plan=[null,null,null];savePlan();renderPlan();});
+document.getElementById('generateBreakfasts').addEventListener('click',generateBreakfastWeek);
+document.getElementById('clearPlan').addEventListener('click',()=>{
+  plan=[null,null,null];
+  breakfastPlan=[null,null,null,null,null,null,null];
+  savePlan();
+  saveBreakfastPlan();
+  renderPlan();
+  renderBreakfastPlan();
+  document.getElementById('shoppingPanel').hidden = true;
+});
 document.getElementById('copy').addEventListener('click',async()=>{
-  const names = ['L-M','X-J','V-S'].map((d,i)=> {
-    const r=RECIPES.find(x=>x.id===plan[i]); return `${d}: ${r?r.title:'Sin elegir'}${r?' — '+r.url:''}`;
+  const mealNames = ['L-M','X-J','V-S'].map((d,i)=>{
+    const r=RECIPES.find(x=>x.id===plan[i]);
+    return `${d}: ${r?r.title:'Sin elegir'}${r?' — '+r.url:''}`;
   }).join('\n');
+
+  const days = ['L','M','X','J','V','S','D'];
+  const breakfastNames = days.map((d,i)=>{
+    const r=BREAKFASTS.find(x=>x.id===breakfastPlan[i]);
+    return `${d} desayuno: ${r?r.title:'Sin elegir'}${r?' — '+r.url:''}`;
+  }).join('\n');
+
+  const names = `COMIDAS\n${mealNames}\n\nDESAYUNOS\n${breakfastNames}`;
   try { await navigator.clipboard.writeText(names); alert('Semana copiada al portapapeles.'); }
   catch(e) { prompt('Copia la semana:', names); }
 });
@@ -416,6 +540,7 @@ function breakfastCard(r){
     <div class="actions">
       <a class="btn cookidoo" href="${r.url}" target="_blank" rel="noopener">Abrir en Cookidoo ↗</a>
       <button class="favorite ${fav?'on':''}" onclick="toggleBreakfastFav('${r.id}')">${fav?'★ Guardada':'☆ Favorita'}</button>
+      <button onclick="addBreakfastToPlan('${r.id}')">Añadir a semana</button>
     </div>
     <div class="match">${r.match} · Cookidoo: “${r.cookidoo_title}”</div>
   </article>`;
@@ -441,7 +566,7 @@ document.getElementById('tabMeals').addEventListener('click', ()=>setTab('meals'
 document.getElementById('tabBreakfasts').addEventListener('click', ()=>setTab('breakfasts'));
 renderBreakfasts();
 
-render(); renderPlan();
+render(); renderPlan(); renderBreakfastPlan();
 setTab(localStorage.getItem('tm7_active_tab') || 'meals');
 </script>
 </body>
